@@ -8,9 +8,7 @@ REST API for PostgreSQL.
 
 ```javascript
 var nuodata = require('nuodata-pg-api');
-var app = nuodata(
-  process.env.DATABASE_URL // your database connection string
-);
+var app = nuodata();
 
 // Nuodata DB API uses KoaJS, if you want to extend it to your needs you can use (see http://koajs.com/ for more info)
 app.koa.use(function* (next) {
@@ -20,7 +18,7 @@ app.koa.use(function* (next) {
 
 // this will execute the setup script on every start up, you can choose
 app.init({
-  globalDb: true, // if you want a global DB object for your database, basically if your app connects to only one database
+  globalDb: process.env.DATABASE_URL, // if you want a global DB object for your database, pass the dsn. Basically if your app connects to only one database
   logLevel: 'fatal'|'error'|'warn'|'info'|'debug'| // the log level used by the bunyan logger (default 'info'), see https://github.com/trentm/node-bunyan for more info
   logRequest: true|false // whether to log request, using INFO logging level
   logStreams: [] // an array of log streams, see https://github.com/trentm/node-bunyan for more information

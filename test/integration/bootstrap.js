@@ -31,6 +31,8 @@ class ManatiIntegrationTest {
     this.sqlFile = sqlFile;
     this.rootPath = __dirname + '/../../';
     this.port = process.env.PGPORT || 5432;
+
+    this.db = pgp(this.dsn);
   }
 
   start(options, plugins) {
@@ -39,9 +41,6 @@ class ManatiIntegrationTest {
     options = _.defaults(options || {}, {
       logLevel: 'fatal'
     });
-
-    this.db = pgp(this.dsn);
-    var db = this.db;
 
     // create db
     return cp.exec('createdb --host=localhost --port=' + self.port + ' --no-password --username=' + process.env.PGUSER + ' ' + this.databaseName)
@@ -61,7 +60,9 @@ class ManatiIntegrationTest {
           });
         }
 
-        self.app.init({globalDb: true});
+        self.app.init({
+          dsn: self.dsn
+        });
         self.app = require('supertest-koa-agent')(self.app.koa);
       });
   }

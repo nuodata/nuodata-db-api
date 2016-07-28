@@ -99,9 +99,10 @@ class App {
     var self = this;
     this.options = options || {};
 
-    if (this.options.globalDb) {
+    if (this.options.dsn) {
+      var db = pgPromise(this.options.dsn);
       this.koa.use(function* (next) {
-        this.request.db = pgPromise(self.dsn);
+        this.request.db = db;
         yield next;
       });
     }

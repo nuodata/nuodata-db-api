@@ -20,7 +20,6 @@
 var _ = require('lodash');
 var Boom = require('boom');
 var path = require('path');
-var Bluebird = require('bluebird');
 
 var pgPromise = require('pg-promise')({
   'pgFormatting': true
@@ -88,7 +87,7 @@ class App {
   }
 
   initDefaultLogger() {
-    this.logger = require('bunyan').createLogger({name: "manati", streams: [{
+    this.logger = require('bunyan').createLogger({name: "nuodata", streams: [{
       level: process.env.LOG_LEVEL || 'info',
       stream: process.stdout            // log INFO and above to stdout
     }]});

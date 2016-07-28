@@ -41,6 +41,7 @@ class ManatiIntegrationTest {
     });
 
     this.db = pgp(this.dsn);
+    var db = this.db;
 
     // create db
     return cp.exec('createdb --host=localhost --port=' + self.port + ' --no-password --username=' + process.env.PGUSER + ' ' + this.databaseName)
@@ -60,7 +61,7 @@ class ManatiIntegrationTest {
           });
         }
 
-        self.app.init();
+        self.app.init({globalDb: true});
         self.app = require('supertest-koa-agent')(self.app.koa);
       });
   }

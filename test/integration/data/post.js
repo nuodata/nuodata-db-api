@@ -122,14 +122,14 @@ describe('POST /data/:table', function (done) {
         test.app.post('/data/time_data')
           .set('Content-Type', 'application/json')
           .send({
-            timestampz_data: '2022-01-13T20:26:04.697Z',
+            timestampz_data: '2022-01-18T00:00:00.697Z',
             date_data: '2068-04-18T00:00:00.000Z',
             time_data: '04:25:59',
             timez_data: '09:33:20+00',
             interval_data: '79 years 2 months 16 days 12 hours 9 minutes 7 seconds'
           })
           .expect(200, [{
-            timestampz_data: '2022-01-18T00:26:04.697Z',
+            timestampz_data: '2022-01-18T00:00:00.697Z',
             date_data: '2068-04-17T16:00:00.000Z',
             time_data: '04:25:59',
             timez_data: '09:33:20+00',

@@ -30,7 +30,6 @@ class App {
     this.dsn = dsn;
     this.koa = require('koa')();
     this.server = require('http').createServer(this.koa.callback());
-    this.db = pgPromise(this.dsn);
 
     this.plugins = [];
     this.routers = {};
@@ -50,8 +49,6 @@ class App {
     }
 
     this.plugins.push(plugin({
-      db: this.db,
-      pgp: pgPromise,
       logger: this.logger
     }, options));
   }
@@ -76,7 +73,7 @@ class App {
   }
 
   initRouter() {
-    this.routers.data = require('./lib/router/data')(this.db, this.logger);
+    this.routers.data = require('./lib/router/data')(this.logger);
 
     this.koa.use(this.routers.data.routes());
     this.koa.use(this.routers.data.allowedMethods({
@@ -99,7 +96,15 @@ class App {
    *   logger: if you don't want to use the default logger
    */
   init(options) {
+    var self = this;
     this.options = options || {};
+
+    if (this.options.globalDb) {
+      this.koa.use(function* (next) {
+        this.request.db = pgPromise(self.dsn);
+        yield next;
+      });
+    }
 
     // set logger in the koa context
     var logger = this.logger;

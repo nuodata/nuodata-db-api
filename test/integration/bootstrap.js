@@ -45,6 +45,9 @@ class ManatiIntegrationTest {
     // create db
     return cp.exec('createdb --host=localhost --port=' + self.port + ' --no-password --username=' + process.env.PGUSER + ' ' + this.databaseName)
       .then(() => {
+        return self.query("ALTER DATABASE " + this.databaseName + " SET TimeZone TO 'UTC'");
+      })
+      .then(() => {
         if (self.sqlFile === undefined) {
           return Promise.resolve();
         }

@@ -21,10 +21,6 @@ var _ = require('lodash');
 var Boom = require('boom');
 var path = require('path');
 
-var pgPromise = require('pg-promise')({
-  'pgFormatting': true
-});
-
 class App {
   constructor(dsn, logger) {
     this.dsn = dsn;
@@ -40,6 +36,12 @@ class App {
     else {
       this.logger = logger;
     }
+  }
+
+  createPgPromise() {
+    return require('pg-promise')({
+      'pgFormatting': true
+    });
   }
 
   addPlugin(plugin, options) {
@@ -100,7 +102,7 @@ class App {
     this.options = options || {};
 
     if (this.options.dsn) {
-      var db = pgPromise(this.options.dsn);
+      var db = this.createPgPromise()(this.options.dsn);
       this.koa.use(function* (next) {
         this.request.db = db;
         yield next;

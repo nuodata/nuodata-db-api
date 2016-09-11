@@ -25,7 +25,7 @@ describe('select', function () {
     var query = select.build('table', {}, {"number": '1', "string": "string", "float": '1.22'});
     query = query.toParam();
 
-    query.text.should.be.equal("SELECT * FROM table WHERE (number = $1 AND string = $2 AND float = $3)");
+    query.text.should.be.equal("SELECT * FROM table WHERE (number = $1 AND string = $2 AND float = $3) LIMIT 25");
     query.values.should.be.deep.equal(['1','string', '1.22']);
   });
 

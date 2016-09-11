@@ -22,7 +22,7 @@ const cp = require('child-process-es6-promise');
 const pgp = require('pg-promise')();
 const _ = require('lodash');
 
-class ManatiIntegrationTest {
+class IntegrationTest {
   constructor(sqlFile) {
     this.databaseName = 'manati_test_' + chance.hash({length: 6});
 
@@ -94,4 +94,4 @@ class ManatiIntegrationTest {
   }
 }
 
-global.ManatiIntegrationTest = ManatiIntegrationTest;
+global.IntegrationTest = IntegrationTest;

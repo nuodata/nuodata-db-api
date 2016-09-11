@@ -17,7 +17,7 @@
  */
 "use strict";
 
-var test = new ManatiIntegrationTest(__dirname + '/../bootstrap.sql');
+var test = new IntegrationTest(__dirname + '/../bootstrap.sql');
 var chance = require('chance').Chance();
 
 var log = function (res) {

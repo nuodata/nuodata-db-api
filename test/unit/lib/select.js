@@ -29,11 +29,23 @@ describe('select', function () {
     query.values.should.be.deep.equal(['1','string', '1.22']);
   });
 
+  it('select::build() with limit and offset', function () {
+    var select = new Select();
+    var query = select.build('table', {}, {
+      "number": '1', "string": "string", "float": '1.22',
+      "_limit": 2, "_page": 2
+    });
+    query = query.toParam();
+
+    query.text.should.be.equal("SELECT * FROM table WHERE (number = $1 AND string = $2 AND float = $3) LIMIT 2 OFFSET 2");
+    query.values.should.be.deep.equal(['1', 'string', '1.22']);
+  });
+
   it('select::build() with limit and order', function () {
     var select = new Select();
     var query = select.build('table', {}, {
       "number": '1', "string": "string", "float": '1.22',
-      "limit": 2, "order": "desc::number"
+      "_limit": 2, "_order": "desc::number"
     });
     query = query.toParam();
 
@@ -46,7 +58,7 @@ describe('select', function () {
     var select = new Select();
     var query = select.build('table', {}, {
       "number": '1', "string": "string", "float": '1.22',
-      "limit": 2, "order": "desc::number,asc::float"
+      "_limit": 2, "_order": "desc::number,asc::float"
     });
     query = query.toParam();
 
@@ -60,7 +72,7 @@ describe('select', function () {
 
     select.build.bind(select, 'table', {}, {
       "number": '1', "string": "string", "float": '1.22',
-      "limit": 2, "order": "equal::number,asc::float"
+      "_limit": 2, "_order": "equal::number,asc::float"
     }).should.throw("Invalid order 'equal', valid values are 'desc' or 'asc'");
   });
 });

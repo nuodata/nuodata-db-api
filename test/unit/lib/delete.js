@@ -29,6 +29,14 @@ describe('delete', function () {
     query.values.should.be.deep.equal(['1','string', '1.22']);
   });
 
+  it('delete::build() with limited query', function () {
+    var delet = new Delete();
+    var query = delet.build('table', {}, {"number": '1', '_limit': '20'});
+    query = query.toParam();
+
+    query.text.should.be.equal("DELETE FROM table WHERE (number = $1) LIMIT 20 RETURNING *");
+  });
+
   it('delete::build() mass deleting not allowed', function () {
     var delet = new Delete();
     delet.build.bind(delet, 'table', {}, {})

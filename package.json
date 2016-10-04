@@ -1,6 +1,6 @@
 {
   "name": "nuodata-db-api",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "REST API for PostgreSQL",
   "main": "index.js",
   "scripts": {

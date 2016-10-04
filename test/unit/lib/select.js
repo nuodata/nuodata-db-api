@@ -75,4 +75,17 @@ describe('select', function () {
       "_limit": 2, "_order": "equal::number,asc::float"
     }).should.throw("Invalid order 'equal', valid values are 'desc' or 'asc'");
   });
+
+
+  it('select::build() postgis operator', function () {
+    var select = new Select();
+
+    var query = select.build('table', {}, {
+      "postgis": "gis_dwithin::10,20,100"
+    });
+    query = query.toParam();
+
+    query.text.should.be.equal("SELECT * FROM table WHERE (ST_DWithin(postgis, 'POINT($1, $2)', $3)) LIMIT 25");
+    query.values.should.be.deep.equal([10, 20, 100]);
+  });
 });

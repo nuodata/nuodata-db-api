@@ -18,7 +18,6 @@
 "use strict";
 
 var Insert = manati_test_require('lib/insert.js');
-var Boom = require('boom');
 
 describe('insert', function () {
   it('insert::build() with simple data', function() {
@@ -30,38 +29,22 @@ describe('insert', function () {
     query.values.should.be.deep.equal([1,'string', 1.22]);
   });
 
-  it('insert::build() with array', function () {
+  it.skip('insert::build() with array', function () {
     var insert = new Insert();
     var query = insert.build('table', {"array": ['data', '1', '2']});
     query = query.toParam();
 
-    query.text.should.be.equal("INSERT INTO table (array) VALUES ($1) RETURNING *");
+    query.text.should.be.equal("INSERT INTO table (array) VALUES (?) RETURNING *");
     query.values.should.be.deep.equal([['data', '1', '2']]);
   });
 
-  it('insert::build() with array', function () {
+  it.skip('insert::build() with array of json', function () {
     var insert = new Insert();
-    var query = insert.build('table', {"array": ['data', '1', '2']});
+    var query = insert.build('table', {"array": [{"data": "stuff"}, {"data": 1}, {"stuff": false}]});
     query = query.toParam();
 
-    query.text.should.be.equal("INSERT INTO table (array) VALUES ($1) RETURNING *");
-    query.values.should.be.deep.equal([['data', '1', '2']]);
-  });
-
-  it('insert::build() with json', function () {
-    var insert = new Insert();
-    var query = insert.build('table', {"json": {"some-data": "wazzup"}});
-    query = query.toParam();
-
-    query.text.should.be.equal("INSERT INTO table (json) VALUES ($1) RETURNING *");
-    // json is converted to string
-    query.values.should.be.deep.equal(['{"some-data":"wazzup"}']);
-  });
-
-  it('insert::build() multiple records should fail', function () {
-    var insert = new Insert();
-
-    insert.build.bind(insert, 'table', [{'data': 123}, {'data': 324}]).should.throw('Cannot handle array insert at the moment');
+    query.text.should.be.equal("INSERT INTO table (array) VALUES (?) RETURNING *");
+    query.values.should.be.deep.equal([[{"data": "stuff"}, {"data": 1},{"stuff": false}]]);
   });
 
   it('insert::build() empty records should fail', function () {

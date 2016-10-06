@@ -30,8 +30,8 @@ describe('QueryBuilder.builOperation()', function () {
     QueryBuilder.buildOperation('name', 'contains', '12').operation.should.eq('name @> ?');
 
     var gis_dwithin = QueryBuilder.buildOperation('place', 'gis_dwithin', '10,50,100');
-    gis_dwithin.operation.toString().should.eq("ST_DWithin(place, 'POINT(?, ?)', ?)");
-    gis_dwithin.value.should.be.deep.eq([10, 50, 100]);
+    gis_dwithin.operation.toString().should.eq("ST_DWithin(place,'POINT(10, 50)',?)");
+    gis_dwithin.value.should.be.eq(100);
   });
 });
 

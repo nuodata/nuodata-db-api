@@ -85,7 +85,7 @@ describe('select', function () {
     });
     query = query.toParam();
 
-    query.text.should.be.equal("SELECT * FROM table WHERE (ST_DWithin(postgis,'POINT(10, 20)',$1)) LIMIT 25");
+    query.text.should.be.equal("SELECT * FROM table WHERE (ST_DWithin(postgis,'POINT(10 20)',$1)) LIMIT 25");
     query.values.should.be.deep.equal([100]);
   });
 });

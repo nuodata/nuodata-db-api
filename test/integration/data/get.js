@@ -132,6 +132,14 @@ describe('POST /data/:table', function(done) {
     test.app.get('/data/asdassdasa').expect(404, done);
   });
 
+  it('GET /data/gis_data', function (done) {
+    test.app.get('/data/gis_data?geometry=gis_dwithin::2,2,40')
+      .expect(function(res) {
+        var data = res.body;
+        console.log(data);
+      }).expect(200, done);
+  });
+
   after(function (done) {
     test.stop(done);
   });

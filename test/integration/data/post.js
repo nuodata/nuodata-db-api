@@ -202,6 +202,18 @@ describe('POST /data/:table', function (done) {
     ], done);
   });
 
+  it('POST /data/gis_data', function (done) {
+    test.app.post('/data/gis_data')
+      .set('Content-Type', 'application/json')
+      .send({
+        geometry: 'POINT(10 20)'
+      })
+      .expect(function(res) {
+        console.log(res.body);
+      })
+      .expect(200).end(done);
+  });
+
   after(function (done) {
     test.stop(done);
   });

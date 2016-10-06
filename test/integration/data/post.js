@@ -208,9 +208,6 @@ describe('POST /data/:table', function (done) {
       .send({
         geometry: 'POINT(10 20)'
       })
-      .expect(function(res) {
-        console.log(res.body);
-      })
       .expect(200).end(done);
   });
 

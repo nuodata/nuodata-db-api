@@ -78,7 +78,7 @@ describe('POST /data/:table', function(done) {
     }).expect(200, done);
   });
 
-  it('GET /data/time_data', function (done) {
+  it.skip('GET /data/time_data', function (done) {
     test.app.get('/data/time_data').expect((res) => {
       var data = res.body[0];
       data['timestampz_data'].should.be.a('string');
@@ -136,7 +136,7 @@ describe('POST /data/:table', function(done) {
     test.app.get('/data/gis_data?geometry=gis_dwithin::2,2,40')
       .expect(function(res) {
         var data = res.body;
-        console.log(data);
+        data.length.should.be.eq(1);
       }).expect(200, done);
   });
 

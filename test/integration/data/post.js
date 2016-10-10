@@ -147,8 +147,8 @@ describe('POST /data/:table', function (done) {
           .expect(200, [data])
           .end(cb);
       },
-      // check there are 4 uuids in database now
-      checkLength('/data/time_data', 3)
+      // check there are 2 records in database now
+      checkLength('/data/misc_data', 2)
     ], done);
   });
 

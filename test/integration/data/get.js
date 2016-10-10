@@ -17,44 +17,35 @@
  */
 "use strict";
 
-var test = new IntegrationTest(__dirname + '/../bootstrap.sql');
 var chance = require('chance').Chance();
 
 var log = function (res) {
   console.log(res.body);
 };
 
-describe('POST /data/:table', function(done) {
+describe('GET /data/:table', function() {
   before(function (done) {
-    test.start()
-      .then(function () {
-        done();
-      })
-      .catch((error) => {
-        console.error(`exec error: ${error}`);
-        console.error(error.stack);
-        done();
-      });
+    _test.db.boot().then(() => {done();});
   });
 
   it('GET /data/uuid_data', function (done) {
-    test.app.get('/data/uuid_data').expect((res) => {
+    _test.app.get('/data/uuid_data').expect((res) => {
       res.body[0]['uuid'].should.be.a('string');
     }).expect(200, done);
   });
 
   it('GET /data/uuid_data invalid input for uuid', function (done) {
-    test.app.get('/data/uuid_data?uuid=eq::2').expect((res) => {
+    _test.app.get('/data/uuid_data?uuid=eq::2').expect((res) => {
       res.body['message'].should.be.eq('invalid input syntax for uuid: "2"')
     }).expect(400, done);
   });
 
   it('GET /data/uuid_data valid selection', function (done) {
-    test.app.get('/data/uuid_data?uuid=eq::199F5EFB-2DF6-42CF-90D7-61D90212C74A').expect(200, done);
+    _test.app.get('/data/uuid_data?uuid=eq::199F5EFB-2DF6-42CF-90D7-61D90212C74A').expect(200, done);
   });
 
   it('GET /data/number_data', function (done) {
-    test.app.get('/data/number_data').expect((res) => {
+    _test.app.get('/data/number_data').expect((res) => {
       var data = res.body[0];
       data['smallint_number'].should.be.a('number');
       data['int_number'].should.be.a('number');
@@ -67,7 +58,7 @@ describe('POST /data/:table', function(done) {
   });
 
   it('GET /data/string_data', function (done) {
-    test.app.get('/data/string_data').expect((res) => {
+    _test.app.get('/data/string_data').expect((res) => {
       var data = res.body[0];
       data['char_short'].should.be.a('string');
       data['char_long'].should.be.a('string');
@@ -79,7 +70,7 @@ describe('POST /data/:table', function(done) {
   });
 
   it.skip('GET /data/time_data', function (done) {
-    test.app.get('/data/time_data').expect((res) => {
+    _test.app.get('/data/time_data').expect((res) => {
       var data = res.body[0];
       data['timestampz_data'].should.be.a('string');
       data['date_data'].should.be.a('string');
@@ -90,7 +81,7 @@ describe('POST /data/:table', function(done) {
   });
 
   it('GET /data/misc_data', function (done) {
-    test.app.get('/data/misc_data').expect((res) => {
+    _test.app.get('/data/misc_data').expect((res) => {
       var data = res.body[0];
       data['money_data'].should.be.a('string');
       data['bool_data'].should.be.a('boolean');
@@ -100,7 +91,7 @@ describe('POST /data/:table', function(done) {
   });
 
   it('GET /data/ip_data', function (done) {
-    test.app.get('/data/ip_data').expect((res) => {
+    _test.app.get('/data/ip_data').expect((res) => {
       var data = res.body[0];
       data['ip_data'].should.be.a('string');
       data['host_data'].should.be.a('string');
@@ -109,7 +100,7 @@ describe('POST /data/:table', function(done) {
   });
 
   it('GET /data/json_data', function (done) {
-    test.app.get('/data/json_data').expect((res) => {
+    _test.app.get('/data/json_data').expect((res) => {
       var data = res.body[0];
       data['json_data'].should.be.a('object');
       data['jsonb_data'].should.be.a('object');
@@ -117,7 +108,7 @@ describe('POST /data/:table', function(done) {
   });
 
   it('GET /data/range_data', function (done) {
-    test.app.get('/data/range_data').expect((res) => {
+    _test.app.get('/data/range_data').expect((res) => {
       var data = res.body[0];
       data['int4range_data'].should.be.a('string');
       data['int8range_data'].should.be.a('string');
@@ -129,11 +120,11 @@ describe('POST /data/:table', function(done) {
   });
 
   it('GET /data/non-existing-table', function (done) {
-    test.app.get('/data/asdassdasa').expect(404, done);
+    _test.app.get('/data/asdassdasa').expect(404, done);
   });
 
   it('GET /data/gis_data', function (done) {
-    test.app.get('/data/gis_data?geometry=gis_dwithin::2,2,40')
+    _test.app.get('/data/gis_data?geometry=gis_dwithin::2,2,40')
       .expect(function(res) {
         var data = res.body;
         data.length.should.be.eq(1);
@@ -141,6 +132,6 @@ describe('POST /data/:table', function(done) {
   });
 
   after(function (done) {
-    test.stop(done);
+    _test.db.clear().then(() => {done();});
   });
 });

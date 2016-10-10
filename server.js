@@ -44,12 +44,27 @@ var dbfrom = config.get('database.from');
 if (dbfrom === 'dsn') {
   let pgp = app.pgp();
   app.db = pgp(config.get('database.dsn'));
-
   app.logger.info('Connecting to database on %s', config.get('database.dsn'));
 }
 
 // CORS
 app.use(cors(Object.assign({}, config.get('cors'))));
+
+
+// ERROR HANDLER
+app.use(function* errorHandler(next) {
+  try {
+    yield next;
+  } catch (err) {
+    app.logger.error(err);
+
+    var error = require('./lib/errorHandler')(err);
+
+    this.response.status = error.output.statusCode;
+    this.response.type = 'json';
+    this.response.body = JSON.stringify({message: error.output.payload.message});
+  }
+});
 
 // PARSE JSON BODY
 app.use(require('koa-parse-json')());
@@ -75,26 +90,12 @@ app.use(data.allowedMethods({
   methodNotAllowed: () => new Boom.methodNotAllowed()
 }));
 
-// ERROR HANDLER
-app.use(function* errorHandler(next) {
-  try {
-    yield next;
-  } catch (err) {
-    app.logger.error(err);
-
-    var error = require('./lib/errorHandler')(err);
-
-    this.response.status = error.output.statusCode;
-    this.response.type = 'json';
-    this.response.body = JSON.stringify({message: error.output.payload.message});
-  }
-});
-
 app.start = function(port) {
   var server = require('http').createServer(app.callback());
 
   server.listen(port, function () {
-    app.logger.info('Starting server ', server.address());
+    var details = server.address();
+    app.logger.info('Starting server on %s address http://%s:%s', details.family, details.address, details.port);
     app.emit('started');
   });
 

@@ -1,11 +1,12 @@
 {
   "name": "nuodata-db-api",
-  "version": "1.3.5",
+  "version": "2.0.0",
   "description": "REST API for PostgreSQL",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "mocha test/unit/lib/ --require test/unit/bootstrap.js",
-    "integration": "mocha test/integration/data/*.js --require test/integration/bootstrap.js -t 10000"
+    "pretest": "sh test/before_script.sh",
+    "test": "make test",
+    "posttest": "sh test/after_script.sh"
   },
   "engine": {
     "node": ">= 5.0.0"
@@ -36,6 +37,7 @@
     "istanbul-harmony": "^0.3.16",
     "mocha": "^2.4.5",
     "momentjs": "^1.1.14",
+    "require-main": "^0.1.1",
     "supertest-koa-agent": "^0.2.1"
   }
 }

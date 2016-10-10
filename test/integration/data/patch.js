@@ -17,8 +17,6 @@
  */
 "use strict";
 
-var test = new IntegrationTest(__dirname + '/../bootstrap.sql');
-const chance = require('chance').Chance();
 const async = require('async');
 const sprintf = require("sprintf-js").sprintf;
 
@@ -28,7 +26,7 @@ var log = function (res) {
 
 var checkLength = function(route, length) {
   return function(cb) {
-    test.app.get(route).expect((res) => {
+    _test.app.get(route).expect((res) => {
       res.body.should.have.length(length);
     }).expect(200).end(cb);
   };
@@ -36,22 +34,14 @@ var checkLength = function(route, length) {
 
 describe('PATCH /data/:table', function (done) {
   before(function (done) {
-    test.start()
-      .then(function () {
-        done();
-      })
-      .catch((error) => {
-        console.error(`exec error: ${error}`);
-        console.error(error.stack);
-        done();
-      });
+    _test.db.boot().then(() => {done();});
   });
 
   it('PATCH /data/uuid_data?uuid=199F5EFB-2DF6-42CF-90D7-61D90212C74A', function (done) {
     var uuid = chance.guid();
 
     async.series([
-      function(cb) {test.app.patch('/data/uuid_data?uuid=199F5EFB-2DF6-42CF-90D7-61D90212C74A')
+      function(cb) {_test.app.patch('/data/uuid_data?uuid=199F5EFB-2DF6-42CF-90D7-61D90212C74A')
         .set('Content-Type', 'application/json')
         .send({
           uuid: uuid
@@ -65,7 +55,7 @@ describe('PATCH /data/:table', function (done) {
   it('PATCH /data/number_data?smallint_number=gte::32767', function (done) {
     async.series([
       function (cb) {
-        test.app.patch('/data/number_data?smallint_number=gte::32767')
+        _test.app.patch('/data/number_data?smallint_number=gte::32767')
           .set('Content-Type', 'application/json')
           .send({
             'int_number': 1
@@ -86,6 +76,6 @@ describe('PATCH /data/:table', function (done) {
   });
 
   after(function (done) {
-    test.stop(done);
+    _test.db.clear().then(() => {done();});
   });
 });

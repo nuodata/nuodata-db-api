@@ -17,10 +17,7 @@
  */
 "use strict";
 
-var test = new IntegrationTest(__dirname + '/../bootstrap.sql');
-const chance = require('chance').Chance();
 const async = require('async');
-const sprintf = require("sprintf-js").sprintf;
 
 var log = function (res) {
   console.log(res.body);
@@ -28,7 +25,7 @@ var log = function (res) {
 
 var checkLength = function(route, length) {
   return function(cb) {
-    test.app.get(route).expect((res) => {
+    _test.app.get(route).expect((res) => {
       res.body.should.have.length(length);
     }).expect(200).end(cb);
   };
@@ -36,22 +33,14 @@ var checkLength = function(route, length) {
 
 describe('POST /data/:table', function (done) {
   before(function (done) {
-    test.start()
-      .then(function () {
-        done();
-      })
-      .catch((error) => {
-        console.error(`exec error: ${error}`);
-        console.error(error.stack);
-        done();
-      });
+    _test.db.boot().then(() => {done();});
   });
 
   it('POST /data/uuid_data', function (done) {
     var uuid = chance.guid();
 
     async.series([
-      function(cb) {test.app.post('/data/uuid_data')
+      function(cb) {_test.app.post('/data/uuid_data')
         .set('Content-Type', 'application/json')
         .send({
           uuid: uuid
@@ -66,7 +55,7 @@ describe('POST /data/:table', function (done) {
   it('POST /data/number_data', function (done) {
     async.series([
       function (cb) {
-        test.app.post('/data/number_data')
+        _test.app.post('/data/number_data')
           .set('Content-Type', 'application/json')
           .send({
             'smallint_number': 1,
@@ -98,7 +87,7 @@ describe('POST /data/:table', function (done) {
 
     async.series([
       function (cb) {
-        test.app.post('/data/string_data')
+        _test.app.post('/data/string_data')
           .set('Content-Type', 'application/json')
           .send(data = {
             'char_short': chance.character(),
@@ -119,7 +108,7 @@ describe('POST /data/:table', function (done) {
   it('POST /data/time_data', function (done) {
     async.series([
       function (cb) {
-        test.app.post('/data/time_data')
+        _test.app.post('/data/time_data')
           .set('Content-Type', 'application/json')
           .send({
             timestampz_data: '2022-01-18T00:00:00.697Z',
@@ -147,7 +136,7 @@ describe('POST /data/:table', function (done) {
 
     async.series([
       function (cb) {
-        test.app.post('/data/misc_data')
+        _test.app.post('/data/misc_data')
           .set('Content-Type', 'application/json')
           .send(data = {
             'money_data': chance.dollar({max:999}),
@@ -168,7 +157,7 @@ describe('POST /data/:table', function (done) {
 
     async.series([
       function (cb) {
-        test.app.post('/data/ip_data')
+        _test.app.post('/data/ip_data')
           .set('Content-Type', 'application/json')
           .send(data = {
             'macaddr_data': chance.mac_address().toLowerCase(),
@@ -188,7 +177,7 @@ describe('POST /data/:table', function (done) {
 
     async.series([
       function (cb) {
-        test.app.post('/data/json_data')
+        _test.app.post('/data/json_data')
           .set('Content-Type', 'application/json')
           .send(data = {
             'json_data': {"string": chance.paragraph(), "number": chance.integer(), "float": chance.floating(), "boolean": chance.bool()},
@@ -203,7 +192,7 @@ describe('POST /data/:table', function (done) {
   });
 
   it('POST /data/gis_data', function (done) {
-    test.app.post('/data/gis_data')
+    _test.app.post('/data/gis_data')
       .set('Content-Type', 'application/json')
       .send({
         geometry: 'POINT(10 20)'
@@ -212,6 +201,6 @@ describe('POST /data/:table', function (done) {
   });
 
   after(function (done) {
-    test.stop(done);
+    _test.db.clear().then(() => {done();});
   });
 });

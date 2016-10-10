@@ -17,37 +17,26 @@
  */
 "use strict";
 
-var test = new IntegrationTest(__dirname + '/../bootstrap.sql');
-var chance = require('chance').Chance();
-
 var log = function (res) {
   console.log(res.body);
 };
 
 describe('GET /data/count/:table/:count', function(done) {
   before(function (done) {
-    test.start()
-      .then(function () {
-        done();
-      })
-      .catch((error) => {
-        console.error(`exec error: ${error}`);
-        console.error(error.stack);
-        done();
-      });
+    _test.db.boot().then(() => {done();});
   });
 
   it('GET /data/count/uuid_data/uuid', function (done) {
-    test.app.get('/data/count/uuid_data/uuid').expect((res) => {
+    _test.app.get('/data/count/uuid_data/uuid').expect((res) => {
       res.body['count'].should.be.eq('3');
     }).expect(200, done);
   });
 
   it('GET /data/count/dasdsasdsds/uuid', function (done) {
-    test.app.get('/data/count/dasdsasdsds/uuid').expect(404, done);
+    _test.app.get('/data/count/dasdsasdsds/uuid').expect(404, done);
   });
 
   after(function (done) {
-    test.stop(done);
+    _test.db.clear().then(() => {done();});
   });
 });

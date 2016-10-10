@@ -105,7 +105,7 @@ describe('POST /data/:table', function (done) {
     ], done);
   });
 
-  it('POST /data/time_data', function (done) {
+  it.skip('POST /data/time_data', function (done) {
     async.series([
       function (cb) {
         _test.app.post('/data/time_data')

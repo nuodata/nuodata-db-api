@@ -14,10 +14,10 @@ sudo: required
 
 env:
   global:
-    - NODE_ENV=test
-    - DATABASE_URL=postgres://localhost:5432/travis_ci_test
-    - PGDATABASE=travis_ci_test
-
+    - NODE_ENV=testing
+    - DATABASE_URL=postgres://travis_ci_user@localhost:5432/travis_ci_db
+    - PGTZ='UTC'
+    
 addons:
   apt:
     sources:

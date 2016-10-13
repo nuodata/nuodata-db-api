@@ -21,19 +21,19 @@ var log = function (res) {
   console.log(res.body);
 };
 
-describe('GET /data/count/:table/:count', function(done) {
+describe('GET /data/:table/count/:count', function(done) {
   before(function (done) {
     _test.db.boot().then(() => {done();});
   });
 
-  it('GET /data/count/uuid_data/uuid', function (done) {
-    _test.app.get('/data/count/uuid_data/uuid').expect((res) => {
+  it('GET /data/uuid_data/count/uuid', function (done) {
+    _test.app.get('/data/uuid_data/count/uuid').expect((res) => {
       res.body['count'].should.be.eq('3');
     }).expect(200, done);
   });
 
-  it('GET /data/count/dasdsasdsds/uuid', function (done) {
-    _test.app.get('/data/count/dasdsasdsds/uuid').expect(404, done);
+  it('GET /data/dasdsasdsds/count/uuid', function (done) {
+    _test.app.get('/data/dasdsasdsds/count/uuid').expect(404, done);
   });
 
   after(function (done) {

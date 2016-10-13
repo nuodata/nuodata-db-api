@@ -38,9 +38,29 @@ var cleardb = function () {
   });
 };
 
+var app = require('koa')();
+var nuodata = require('require-main')();
+nuodata = nuodata(
+  require('bunyan').createLogger({
+    name: 'nuodata-db-api',
+    streams: [{
+      level: 'fatal',
+      stream: process.stdout
+    }]
+  }), {
+    methods: ['GET', 'DELETE', 'POST', 'PATCH']
+  }
+);
+
+app.use(function* (next) {
+  this.request.db = pg;
+  yield next;
+});
+app.use(nuodata);
+
 global._test = {
   pg: pg,
-  app: require('supertest-koa-agent')(require('require-main')()),
+  app: require('supertest-koa-agent')(app),
   db: {
     boot: bootdb,
     clear: cleardb

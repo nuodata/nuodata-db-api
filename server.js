@@ -25,7 +25,6 @@ const cors = require('koa-cors');
 const config = require('config');
 var app = module.exports = require('koa')();
 
-
 // LOGGER
 var logger = app.logger = require('bunyan').createLogger({
   name: config.get('logger.name'),

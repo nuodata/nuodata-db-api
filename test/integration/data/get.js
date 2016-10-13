@@ -120,7 +120,10 @@ describe('GET /data/:table', function() {
   });
 
   it('GET /data/non-existing-table', function (done) {
-    _test.app.get('/data/asdassdasa').expect(404, done);
+    _test.app.get('/data/asdassdasa')
+      .expect({message: 'Table or view not found'})
+      .expect(404)
+      .end(done);
   });
 
   it('GET /data/gis_data', function (done) {

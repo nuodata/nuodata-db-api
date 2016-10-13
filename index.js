@@ -4,15 +4,30 @@ var compose = require('koa-compose');
 var _ = require('lodash');
 
 module.exports = function(logger, options) {
+  var db;
+  var middlewares = [];
+
   options = _.defaults(options, {
     methods: ['GET'],
     throw: true
   });
   var routes = options.methods;
 
+  const pgp = require('pg-promise')({
+    promiseLib: require('bluebird')
+  });
+
   var data = require('./lib/router/data')(logger, routes);
 
-  return compose([
+  if (options.connection) {
+    db = pgp(options.connection);
+    middlewares = [function* (next) {
+      this.request.db = db;
+      yield next;
+    }];
+  }
+
+  middlewares = middlewares.concat([
     function* errorHandler(next) {
       try {
         yield next;
@@ -42,4 +57,6 @@ module.exports = function(logger, options) {
       methodNotAllowed: () => new Boom.methodNotAllowed()
     })
   ]);
+
+  return compose(middlewares);
 };

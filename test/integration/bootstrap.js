@@ -48,14 +48,10 @@ nuodata = nuodata(
       stream: process.stdout
     }]
   }), {
+    connection: process.env.DATABASE_URL,
     methods: ['GET', 'DELETE', 'POST', 'PATCH']
   }
 );
-
-app.use(function* (next) {
-  this.request.db = pg;
-  yield next;
-});
 app.use(nuodata);
 
 global._test = {

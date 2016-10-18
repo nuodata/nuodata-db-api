@@ -1,31 +1,38 @@
 # Nuodata DB API
 
-REST API for PostgreSQL.
+Koa.js middleware REST API for PostgreSQL with automatic API endpoints matching your tables or views.
 
 [![Build Status](https://travis-ci.org/nuodata/nuodata-db-api.svg?branch=master)](https://travis-ci.org/nuodata/nuodata-db-api)
 
 ## Usage
 
+### Single server
+
 ```javascript
-var nuodata = require('nuodata-pg-api');
-var app = nuodata();
+// Instantiate your own koa.js app
+var app = require('koa')();
 
-// Nuodata DB API uses KoaJS, if you want to extend it to your needs you can use (see http://koajs.com/ for more info)
-app.koa.use(function* (next) {
-  // add whatever code you want, will be executed first
-  yield next;
+// use your own logger
+var logger = app.logger = require('bunyan').createLogger({
+  name: config.get('logger.name'),
+  streams: [{stream: process.stdout, level: 'info'}]
 });
 
-// this will execute the setup script on every start up, you can choose
-app.init({
-  dsn: process.env.DATABASE_URL, // if you want a global DB object for your database, pass the dsn. Basically if your app connects to only one database
-  logLevel: 'fatal'|'error'|'warn'|'info'|'debug'| // the log level used by the bunyan logger (default 'info'), see https://github.com/trentm/node-bunyan for more info
-  logRequest: true|false // whether to log request, using INFO logging level
-  logStreams: [] // an array of log streams, see https://github.com/trentm/node-bunyan for more information
+// inject it in the nuodata middleware, along with other options
+var nuodata = require('nuodata-db-api')(logger, {
+  // exclude some verbs if not allowed (e.g. use ['GET', 'POST'] if users
+  // are not allowed to delete or update records at all via the API, you can
+  // still control authorization under PostgreSQL even if the HTTP verb is allowed though)
+  methods: ['GET', 'POST', 'PATCH', 'DELETE']
 });
-app.start(3000);
 
+var router = require('koa-router')();
+router.get('/v1', nuodata);
+app
+  .use(router.routes())
+  .use(router.allowedMethods());
 
+app.listen(3000);
 ```
 
 ## Example
@@ -40,7 +47,7 @@ GET /data/users?limit=2&name=like::J*
 
 ### Count some users data
 ```
-GET /data/count/users/name?name=like::J*
+GET /data/users/count/name?name=like::J*
 ```
 ```json
 {"count":"2"}
@@ -78,3 +85,7 @@ GET /data/users?name=eq::John
 ```json
 [{"name": "John", "age": 22}]
 ```
+
+### More documentation
+
+Check the full documentation at http://docs.nuodata.io

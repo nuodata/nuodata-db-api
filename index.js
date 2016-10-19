@@ -20,6 +20,7 @@ module.exports = function(logger, options) {
   var data = require('./lib/router/data')(logger, routes);
 
   if (options.connection) {
+    logger.info('Using connection ', options.connection);
     db = pgp(options.connection);
     middlewares = [function* (next) {
       this.request.db = db;

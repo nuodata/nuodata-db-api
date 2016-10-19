@@ -25,13 +25,14 @@
     "squel": "^5.5.0"
   },
   "devDependencies": {
-    "koa": "^1.1.2",
     "async": "^1.5.2",
+    "bunyan": "^1.8.3",
     "chai": "^3.5.0",
     "chance": "^1.0.1",
     "child-process-es6-promise": "^1.0.0",
     "istanbul": "^0.4.3",
     "istanbul-harmony": "^0.3.16",
+    "koa": "^1.1.2",
     "mocha": "^2.4.5",
     "momentjs": "^1.1.14",
     "require-main": "^0.1.1",

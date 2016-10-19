@@ -17,6 +17,7 @@
     "bluebird": "^3.4.0",
     "boom": "^3.1.1",
     "koa-compose": "^2.4.0",
+    "koa-parse-json": "^1.0.1",
     "koa-router": "^5.3.0",
     "lodash": "^4.0.0",
     "pg-promise": "^5.3.4",

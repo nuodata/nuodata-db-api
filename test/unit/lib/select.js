@@ -25,8 +25,8 @@ describe('select', function () {
     var query = select.build('table', {}, {"number": '1', "string": "string", "float": '1.22'});
     query = query.toParam();
 
-    query.text.should.be.equal("SELECT * FROM table WHERE (number = $1 AND string = $2 AND float = $3) LIMIT 25");
-    query.values.should.be.deep.equal(['1','string', '1.22']);
+    query.text.should.be.equal("SELECT * FROM table WHERE (number = $1 AND string = $2 AND float = $3) LIMIT $4");
+    query.values.should.be.deep.equal(['1','string', '1.22', 25]);
   });
 
   it('select::build() with limit and offset', function () {
@@ -37,8 +37,8 @@ describe('select', function () {
     });
     query = query.toParam();
 
-    query.text.should.be.equal("SELECT * FROM table WHERE (number = $1 AND string = $2 AND float = $3) LIMIT 2 OFFSET 2");
-    query.values.should.be.deep.equal(['1', 'string', '1.22']);
+    query.text.should.be.equal("SELECT * FROM table WHERE (number = $1 AND string = $2 AND float = $3) LIMIT $4 OFFSET $5");
+    query.values.should.be.deep.equal(['1', 'string', '1.22', 2, 2]);
   });
 
   it('select::build() with limit and order', function () {
@@ -50,8 +50,8 @@ describe('select', function () {
     query = query.toParam();
 
     query.text.should.be.equal("SELECT * FROM table WHERE (number = $1 AND string = $2 AND float = $3) ORDER BY" +
-      " number DESC LIMIT 2");
-    query.values.should.be.deep.equal(['1', 'string', '1.22']);
+      " number DESC LIMIT $4");
+    query.values.should.be.deep.equal(['1', 'string', '1.22', 2]);
   });
 
   it('select::build() with limit and 2 orders', function () {
@@ -63,8 +63,8 @@ describe('select', function () {
     query = query.toParam();
 
     query.text.should.be.equal("SELECT * FROM table WHERE (number = $1 AND string = $2 AND float = $3) ORDER BY" +
-      " number DESC, float ASC LIMIT 2");
-    query.values.should.be.deep.equal(['1', 'string', '1.22']);
+      " number DESC, float ASC LIMIT $4");
+    query.values.should.be.deep.equal(['1', 'string', '1.22', 2]);
   });
 
   it('select::build() with limit and wrong orders', function () {
@@ -85,7 +85,7 @@ describe('select', function () {
     });
     query = query.toParam();
 
-    query.text.should.be.equal("SELECT * FROM table WHERE (ST_DWithin(postgis,'POINT(10 20)',$1)) LIMIT 25");
-    query.values.should.be.deep.equal([100]);
+    query.text.should.be.equal("SELECT * FROM table WHERE (ST_DWithin(postgis,'POINT(10 20)',$1)) LIMIT $2");
+    query.values.should.be.deep.equal([100, 25]);
   });
 });

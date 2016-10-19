@@ -110,7 +110,7 @@ CREATE TABLE range_data (
 INSERT INTO range_data (int4range_data, int8range_data, numrange_data, tsrange_data, tstzrange_data, daterange_data)
 VALUES ('[1,2)', '[128, 890]', '(11.1, 22.2)', '[2010-01-01 14:30, 2010-01-01 15:30)', '[2010-01-01 14:30, 2010-01-01 15:30)', '[January 8 1999, January 8 2000]');
 
-CREATE EXTENSION postgis;
+CREATE EXTENSION IF NOT EXISTS postgis;
 
 CREATE TABLE gis_data (
   -- range

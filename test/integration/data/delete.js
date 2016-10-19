@@ -34,7 +34,9 @@ var checkLength = function(route, length) {
 
 describe('DELETE /data/:table', function () {
   before(function (done) {
-    _test.db.boot().then(() => {done();});
+    _test.db.boot().then(() => {
+      done();
+    });
   });
 
   it('DELETE /data/uuid_data?uuid=199F5EFB-2DF6-42CF-90D7-61D90212C74A', function (done) {

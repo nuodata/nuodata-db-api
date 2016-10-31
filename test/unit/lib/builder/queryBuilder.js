@@ -1,6 +1,6 @@
 "use strict";
 
-var QueryBuilder = manati_test_require('lib/queryBuilder.js');
+var QueryBuilder = manati_test_require('lib/builder/query.js');
 
 describe('QueryBuilder.builOperation()', function () {
   it('builOperation() with unknown operator', function() {

@@ -9,7 +9,7 @@ module.exports = function(logger, options) {
 
   options = _.defaults(options, {
     methods: ['GET'],
-    throw: true
+    throw: true,
   });
   var routes = options.methods;
 
